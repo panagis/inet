@@ -30,6 +30,7 @@ module AntennaBase like IAntenna
         string mobilityModule = default(mobilityType == "" ? "^.^.^.mobility" : ".mobility"); // the path to the mobility module relative to this module
         string mobilityType = default("");
         int numAntennas = default(1); // the number of antennas in the antenna array
+        mobility.visualRepresentation = default(""); // disable visual representation of mobility submodule by default 
         @display("i=device/antennatower");
     submodules:
         mobility: <mobilityType> like IMobility if mobilityType != "" {
