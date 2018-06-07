@@ -29,6 +29,4 @@ package inet.linklayer.ieee80211.mac.contract;
 //
 moduleinterface IHcf
 {
-    parameters:
-        @display("i=block/rx");
 }
