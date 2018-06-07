@@ -55,6 +55,18 @@ Ieee80211Mac::~Ieee80211Mac()
         delete pendingRadioConfigMsg;
 }
 
+void Ieee80211Mac::setInitialRadioMode() {
+    const char *initialRadioMode = par("initialRadioMode");
+    if(!strcmp(initialRadioMode, "off"))
+        radio->setRadioMode(IRadio::RADIO_MODE_OFF);
+    else if(!strcmp(initialRadioMode, "sleep"))
+        radio->setRadioMode(IRadio::RADIO_MODE_SLEEP);
+    else if(!strcmp(initialRadioMode, "receiver"))
+        radio->setRadioMode(IRadio::RADIO_MODE_RECEIVER);
+    else
+        throw cRuntimeError("Unknown initialRadio state");
+}
+
 void Ieee80211Mac::initialize(int stage)
 {
     MacProtocolBase::initialize(stage);
@@ -90,17 +102,7 @@ void Ieee80211Mac::initialize(int stage)
         registerInterface();
         emit(modesetChangedSignal, modeSet);
         if (isOperational)
-        {
-            const char *initialRadioMode = par("initialRadioMode");
-            if(!strcmp(initialRadioMode, "off"))
-                radio->setRadioMode(IRadio::RADIO_MODE_OFF);
-            else if(!strcmp(initialRadioMode, "sleep"))
-                radio->setRadioMode(IRadio::RADIO_MODE_SLEEP);
-            else if(!strcmp(initialRadioMode, "receiver"))
-                radio->setRadioMode(IRadio::RADIO_MODE_RECEIVER);
-            else
-                throw cRuntimeError("Unknown initialRadio state");
-        }
+            setInitialRadioMode();
         if (isInterfaceRegistered().isUnspecified())// TODO: do we need multi-MAC feature? if so, should they share interfaceEntry??  --Andras
             registerInterface();
     }
@@ -414,7 +416,7 @@ bool Ieee80211Mac::handleNodeStart(IDoneCallback *doneCallback)
         return true;    // do nothing when called from initialize()
 
     bool ret = MacProtocolBase::handleNodeStart(doneCallback);
-    radio->setRadioMode(IRadio::RADIO_MODE_RECEIVER);
+    setInitialRadioMode();
     return ret;
 }
 
