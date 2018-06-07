@@ -20,11 +20,11 @@ package inet.linklayer.ieee80211.mac;
 import inet.linklayer.base.MacProtocolBase;
 import inet.linklayer.ieee80211.IIeee80211Mac;
 import inet.linklayer.ieee80211.mac.contract.IDcf;
-import inet.linklayer.ieee80211.mac.contract.IHcf;
 import inet.linklayer.ieee80211.mac.contract.IDs;
+import inet.linklayer.ieee80211.mac.contract.IHcf;
 import inet.linklayer.ieee80211.mac.contract.IRx;
-import inet.linklayer.ieee80211.mac.contract.ITx;
 import inet.linklayer.ieee80211.mac.contract.IStatistics;
+import inet.linklayer.ieee80211.mac.contract.ITx;
 import inet.linklayer.ieee80211.mac.coordinationfunction.Dcf;
 import inet.linklayer.ieee80211.mac.coordinationfunction.Hcf;
 
@@ -71,14 +71,11 @@ module Ieee80211Mac extends MacProtocolBase like IIeee80211Mac
         string modeSet @enum("a", "b", "g(erp)", "g(mixed)", "n(mixed-2.4Ghz)", "p", "ac") = default("g(mixed)");
         string fcsMode @enum("declared","computed") = default("declared");
 
-		string initialRadioMode @enum("off", "sleep", "receiver") = default("receiver");
-		
+        string initialRadioMode @enum("off", "sleep", "receiver") = default("receiver");
+
         int mtu @unit(B) = default(2304B);
         bool qosStation = default(false);
 
-		string dcfType = default("Dcf");
-		string hcfType = default("Hcf");
-		string dsType = default("Ds");
 
         *.mibModule = default(absPath(mibModule));
         *.rxModule = "^.rx";
@@ -104,15 +101,15 @@ module Ieee80211Mac extends MacProtocolBase like IIeee80211Mac
         input mgmtIn;
         output mgmtOut;
     submodules:
-        dcf: <dcfType> like IDcf {
+        dcf: <default("Dcf")> like IDcf {
             parameters:
                 @display("p=100,100");
         }
-        hcf: <hcfType> like IHcf {
+        hcf: <default("Hcf")> like IHcf {
             parameters:
                 @display("p=250,100");
         }
-        ds: <dsType> like IDs {
+        ds: <default("Ds")> like IDs {
             parameters:
                 @display("p=400,100");
         }
